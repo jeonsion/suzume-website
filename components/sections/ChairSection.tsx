@@ -53,6 +53,18 @@ const scenes = [
 const CARD_WIDTH = 380;
 const CARD_GAP = 20;
 
+function LoadingSkeleton() {
+  return (
+    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/60">
+      <div className="relative h-8 w-8">
+        <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-[var(--cinema-gold)]" />
+        <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-[var(--cinema-gold)] opacity-30" style={{ animationDuration: "1.5s", animationDirection: "reverse" }} />
+      </div>
+      <div className="mt-3 h-px w-16 bg-gradient-to-r from-transparent via-[var(--cinema-gold)]/40 to-transparent" />
+    </div>
+  );
+}
+
 function VideoCard({
   video,
   title,
@@ -65,6 +77,7 @@ function VideoCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -81,12 +94,12 @@ function VideoCard({
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    if (isVisible) {
+    if (isVisible && isLoaded) {
       v.play().catch(() => {});
     } else {
       v.pause();
     }
-  }, [isVisible]);
+  }, [isVisible, isLoaded]);
 
   return (
     <div
@@ -95,14 +108,18 @@ function VideoCard({
       style={{ width: CARD_WIDTH }}
     >
       <div className="relative aspect-[4/3] overflow-hidden rounded-none bg-black/40">
+        {!isLoaded && <LoadingSkeleton />}
         <video
           ref={videoRef}
           muted
           loop
           playsInline
-          preload="metadata"
-          className="absolute inset-0 h-full w-full object-cover"
+          preload="auto"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+            isLoaded ? "opacity-100" : "opacity-0"
+          }`}
           style={{ willChange: "transform" }}
+          onLoadedData={() => setIsLoaded(true)}
         >
           <source src={video} type="video/mp4" />
         </video>
