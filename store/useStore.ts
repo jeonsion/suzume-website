@@ -18,6 +18,10 @@ interface AppState {
   setJourneyStarted: (v: boolean) => void;
   isTransitioning: boolean;
   setTransitioning: (v: boolean) => void;
+  heroBlobUrl: string | null;
+  setHeroBlobUrl: (url: string | null) => void;
+  introBlobUrl: string | null;
+  setIntroBlobUrl: (url: string | null) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -27,4 +31,8 @@ export const useStore = create<AppState>((set) => ({
   setJourneyStarted: (v) => set({ journeyStarted: v }),
   isTransitioning: false,
   setTransitioning: (v) => set({ isTransitioning: v }),
+  heroBlobUrl: null,
+  setHeroBlobUrl: (url) => set({ heroBlobUrl: url }),
+  introBlobUrl: null,
+  setIntroBlobUrl: (url) => set({ introBlobUrl: url }),
 }));

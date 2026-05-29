@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useStore } from "@/store/useStore";
 
 interface HeroVideoProps {
   /** MP4 source (Safari fallback) */
@@ -20,6 +21,7 @@ export default function HeroVideo({
 }: HeroVideoProps) {
   const [hasError, setHasError] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const heroBlobUrl = useStore((s) => s.heroBlobUrl);
 
   return (
     <div className={`absolute inset-0 overflow-hidden ${className}`}>
@@ -55,8 +57,14 @@ export default function HeroVideo({
           onError={() => setHasError(true)}
           onLoadedData={() => setLoaded(true)}
         >
-          {webmSrc && <source src={webmSrc} type="video/webm" />}
-          <source src={src} type="video/mp4" />
+          {heroBlobUrl ? (
+            <source src={heroBlobUrl} type="video/webm" />
+          ) : (
+            <>
+              {webmSrc && <source src={webmSrc} type="video/webm" />}
+              <source src={src} type="video/mp4" />
+            </>
+          )}
         </motion.video>
       )}
     </div>

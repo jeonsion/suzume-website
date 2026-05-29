@@ -2,6 +2,7 @@
 
 import { useCallback, useRef } from "react";
 import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { useStore } from "@/store/useStore";
 import OpeningScene from "@/components/sections/OpeningScene";
 import WhoIsSuzume from "@/components/sections/WhoIsSuzume";
 
@@ -63,7 +64,7 @@ export default function SuzumeIntroSequence() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#9fe1ff] via-[#d4f2ff] to-[#fff0ce]" />
         <motion.video
           ref={videoRef}
-          src={INTRO_VIDEO_SRC}
+          src={useStore((s) => s.introBlobUrl) || INTRO_VIDEO_SRC}
           muted
           playsInline
           preload="auto"
